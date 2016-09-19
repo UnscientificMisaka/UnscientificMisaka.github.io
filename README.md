@@ -1,9 +1,7 @@
-# HuxBlog Boilerplate
+With the predecessor of the Jekyll template, the link at the bottom of the blog.
+Reading people's things can be called copy? - Kong Yiji
+...
+...
 
-##### This is the boilerplate of [Hux Blog](https://github.com/Huxpro/huxpro.github.io), all documents is over there!
-
-#### [View Boilerplate &rarr;](http://huangxuan.me/huxblog-boilerplate/)
-
-#### [View Live Hux Blog &rarr;](http://huangxuan.me)
-
-## If you like Hux Blog, Please star [huxpro.github.io repo](https://github.com/Huxpro/huxpro.github.io) instead of this! Thank you!
+It is open source, ease of use.
+                                                             - ÓùÛàÃÀÇÙµÄ··Âô»ú 2016.9.19
