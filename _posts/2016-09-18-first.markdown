@@ -4,7 +4,7 @@ title:      "第一篇"
 subtitle:    " \"嘿，你好\""
 date:       2016-09-18 12:00:00
 author:     "LRZ"
-header-img: "img/post-bg-2015.jpg"
+header-img: "img/post-bg-第一篇.jpg"
 tags:
     - 生活
 ---
