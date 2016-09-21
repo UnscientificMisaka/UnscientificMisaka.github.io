@@ -19,7 +19,7 @@ tags:
 ## 正文
 
 这里是采用业界前辈的Jeklly模板和Github Pages搭建的。<br/>
-折腾过Asp.net+C#+SqlServer,也玩过PHP+Apache+MySql,但目前在下才疏学浅，做出来的感觉和这个模板差了很多，更重要的是学生党穷呀，用Github不要租主机，嘿嘿嘿。
+折腾过Asp.net+C#+SqlServer,也玩过PHP+Apache+MySql,但目前在下才疏学浅，做出来的感觉和这个模板差了很多，有现成的插件更方便，更重要的是学生党穷呀，用Github不要租主机，嘿嘿嘿。
 
 
 

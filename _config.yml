@@ -68,7 +68,7 @@ ga_domain: lastwhisper.top
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "高山仰止，景行行止。"
+sidebar-about-description: "没必要的事情不做，该做的迅速解决。"
 sidebar-avatar: /img/大头贴.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
