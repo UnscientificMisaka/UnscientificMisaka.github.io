@@ -59,7 +59,7 @@ duoshuo_share: true                     # set to false if you want to use Commen
 
 # Analytics settings
 # Baidu Analytics
-ba_track_id: 325cc3d6668e1f7b6d80f2be023e07b5
+ba_track_id: 1084aa816d294e3c69ba301563bdf056
 # Google Analytics
 ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
 ga_domain: lastwhisper.top
