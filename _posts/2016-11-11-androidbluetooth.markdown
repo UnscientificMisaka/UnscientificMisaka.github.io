@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "初篇"
-subtitle:    " \"最近\""
+title:      "蓝牙开发"
+subtitle:    "关于安卓6.0广播问题"
 date:       2016-11-11 14:24:00
 author:     "LRZ"
 header-img: "img/post-bg-第一篇.jpg"
