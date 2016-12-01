@@ -61,14 +61,14 @@ duoshuo_share: true                     # set to false if you want to use Commen
 # Baidu Analytics
 ba_track_id: 1084aa816d294e3c69ba301563bdf056
 # Google Analytics
-ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+ga_track_id: ''            # Format: UA-xxxxxx-xx
 ga_domain: lastwhisper.cn
 
 
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "没必要的事情不做，该做的迅速解决。"
+sidebar-about-description: "中二病，爱发呆，。"
 sidebar-avatar: /img/大头贴.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
