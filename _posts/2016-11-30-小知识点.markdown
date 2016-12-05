@@ -26,6 +26,7 @@ tags:
 (1)style.left返回值为字符串类型，可以使用parseInt()转换。
 offsetLeft返回值是数字。<br>
 (2)style.left可以读写，offsetLeft只读。<br>
-(3)最重要的一点，必须在标签中class定义left，定义在外面css的话，style.left取到的是undefined，offsetLeft可以取到。<br>
-ps:今天看了你的名字，没看完我的玻璃心就崩了，还好新海诚最后没给观众喂屎，狗粮也比屎好。我也等你好久啦，只是忘记了你的名字，以后带女朋友好好看一遍，一直崩到现在无心学习，只能更博打发时间。
+(3)最重要的一点，必须在标签中class定义left，定义在外面css的话，style.left取到的值为空，offsetLeft可以取到值。<br>
+4.关于onclick和click<br>
+(1)onclick是绑定事件(告诉浏览器鼠标点击时要做什么)
 
