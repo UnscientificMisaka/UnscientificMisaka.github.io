@@ -1,0 +1,65 @@
+---
+layout:     post
+title:      "Java复习"
+subtitle:    "感觉填空选择会考"
+date:       2016-12-5 20:08:00
+author:     "LRZ"
+header-img: "img/16-12-05.jpg"
+tags:
+    - Java
+---
+
+最近java要期末考试了,还是复习一下，稳点，小心驶得万年船。
+<hr>
+1.数组在创建时已经被赋予了默认值，整数类型(byte,short,int,long)的基本类型变量默认值是0，
+float是0.0f，double是0.0d，char是'\u0000'，boolean是false。<br>
+2.抽象方法：<br>
+(1) 抽象方法:类中没有方法体的方法，抽象类:含有抽象方法的类。
+abstract修饰方法就叫抽象方法，修饰类就叫抽象类。<br>
+(2) 含抽象方法的类必须被声明为抽象类，抽象类必须被继承，抽象方法必须被重写，抽象类不能被实例化，抽象方法只需声明，不需要实现某些功能。<br>
+(3)还是举例比较清楚<br>
+>abstract class A{ //抽象类的声明格式<br>
+>public abstract void a(){}//错，抽象方法不能有方法体<br>
+>public abstract void a();<br>
+>public A(){}<br>
+>}<br>
+><br>
+>abstract class B extends A{}//子类是抽象类<br>
+>class B extends A{<br>//子类是具体类，重写抽象方法
+>public  void a(){...}<br>
+>}<br>
+><br>
+>A a = new A();//错，抽象类无法实例化<br>
+>A a = new B();//通过多态的方式，构造方法在B类中重写过，现在是普通类可以直接实例化<br>
+>抽象类的成员变量可以是变量可以是常量，方法可以抽象也可以非抽象，构造方法当然也要有
+
+
+3.接口中成员必须是public static final<br>
+(1)接口中的数据对所有实现类只有一份，所以是static。如果非static继承多个接口难免出现重名变量<br>
+(2)如果不是final类型的<br>
+4.Integer.parseInt(String s)将字符串参数作为有符号数分析，Integer.valueOf(String s)返回保持指定的String的值的Integer对象，因此前一个是整数类对象，后一个是整数类型变量。忽然如何判断变量类型，目前尚不清楚，日后更新。<br>
+5.关于接口实例化的问题<br>
+接口是不能被实例化的，只能对接口引用，举个例子<br>
+>class A implements B<br>
+> B b = new A();
+<br>
+
+
+可以作为子类的句柄指向子类的实例，但不能通过它调用子类所特有的方法。<br>
+再总结一下，抽象类中可以有非抽象的方法，但接口中所有的方法都是抽象的，接口中数据成员都默认为public static final修饰。<br>
+6.方法覆写与方法重载<br>
+方法覆写是在子类中定义了与父类同名的方法，但被覆写的方法不能拥有比子类更严格的访问权限。
+>public class A{<br>
+>public void a(){...}<br>
+>}<br>
+>public class B extends A{<br>
+>public void a(){...}<br>
+>}<br>
+<br>
+
+方法重载是在一个类中定义多个重名方法，但要求每个方法具有不同的参数类型或参数个数。
+
+7.super的使用情况<br>
+(1)访问父类中被子类覆盖的同名数据成员。<br>
+(2)访问父类中被子类覆写的同名成员方法。<br>
+(3)调用父类的构造方法。<br>
