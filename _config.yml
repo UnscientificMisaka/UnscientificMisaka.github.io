@@ -1,6 +1,6 @@
 # Site settings
-title: Blog
-SEOTitle: 自说自话
+title: 个人
+SEOTitle: 你来看我啦
 header-img: img/home-bg.jpg
 email: 1246533834@qq.com
 description: "庸人"
@@ -68,7 +68,7 @@ ga_domain: lastwhisper.cn
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "中二病，爱发呆，我的眸子里藏着星辰。"
+sidebar-about-description: "中二病，爱发呆，眸子里藏着星辰。"
 sidebar-avatar: /img/大头贴.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 

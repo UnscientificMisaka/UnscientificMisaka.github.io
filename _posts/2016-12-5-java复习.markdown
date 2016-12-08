@@ -19,19 +19,19 @@ abstract修饰方法就叫抽象方法，修饰类就叫抽象类。<br>
 (2) 含抽象方法的类必须被声明为抽象类，抽象类必须被继承，抽象方法必须被重写，抽象类不能被实例化，抽象方法只需声明，不需要实现某些功能。<br>
 (3)还是举例比较清楚<br>
 >abstract class A{ //抽象类的声明格式<br>
->public abstract void a(){}//错，抽象方法不能有方法体<br>
->public abstract void a();<br>
->public A(){}<br>
->}<br>
-><br>
->abstract class B extends A{}//子类是抽象类<br>
->class B extends A{<br>//子类是具体类，重写抽象方法
->public  void a(){...}<br>
->}<br>
-><br>
->A a = new A();//错，抽象类无法实例化<br>
->A a = new B();//通过多态的方式，构造方法在B类中重写过，现在是普通类可以直接实例化<br>
->抽象类的成员变量可以是变量可以是常量，方法可以抽象也可以非抽象，构造方法当然也要有
+public abstract void a(){}//错，抽象方法不能有方法体<br>
+public abstract void a();<br>
+public A(){}<br>
+}<br>
+<br>
+abstract class B extends A{}//子类是抽象类<br>
+class B extends A{<br>//子类是具体类，重写抽象方法
+public  void a(){...}<br>
+}<br>
+<br>
+A a = new A();//错，抽象类无法实例化<br>
+A a = new B();//通过多态的方式，构造方法在B类中重写过，现在是普通类可以直接实例化<br>
+抽象类的成员变量可以是变量可以是常量，方法可以抽象也可以非抽象，构造方法当然也要有
 
 
 3.接口中成员必须是public static final<br>
@@ -50,11 +50,11 @@ abstract修饰方法就叫抽象方法，修饰类就叫抽象类。<br>
 6.方法覆写与方法重载<br>
 方法覆写是在子类中定义了与父类同名的方法，但被覆写的方法不能拥有比子类更严格的访问权限。
 >public class A{<br>
->public void a(){...}<br>
->}<br>
->public class B extends A{<br>
->public void a(){...}<br>
->}<br>
+public void a(){...}<br>
+}<br>
+public class B extends A{<br>
+public void a(){...}<br>
+}<br>
 <br>
 
 方法重载是在一个类中定义多个重名方法，但要求每个方法具有不同的参数类型或参数个数。
