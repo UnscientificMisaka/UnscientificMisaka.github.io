@@ -9,10 +9,13 @@ tags:
     - JavaScript
 ---
 >啊啊啊我果然不适合学计算机。  
->
-## Array  
+  
 
-1.熟悉Array对象方法，常见的push,pop,sort,splice,shift,join,concat,toString等方法。
+## Array  
+  
+1.熟悉Array对象方法，常见的push,pop,sort,splice,shift,join,concat,toString等方法。  
+  
+
 ## 作用域  
 
 1.全局变量和局部变量  
