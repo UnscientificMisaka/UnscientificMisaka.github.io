@@ -2,7 +2,7 @@
 layout:     post
 title:      "JS刷题总结"
 subtitle:    "经典五十题"
-date:       2016-12-8 18:46:00
+date:       2016-12-12 18:46:00
 author:     "LRZ"
 header-img: "img/16-12-8.jpg"
 tags:
@@ -90,4 +90,10 @@ people里的是一个参数列表，但apply传递的是数组，在apply的过�
 	test.apply(null);//[object Window]  
   
 
-其实max不需要this，传什么值都可以，只要不是未定义的变量名。看起来规范一点传了null,但主要想说用call还是apply大多数的时候传啥函数里就是啥，但传null或undefined时，js执行的是环境的全局变量。
+其实max不需要this，传什么值都可以，只要不是未定义的变量名。看起来规范一点传了null,但主要想说用call还是apply大多数的时候传啥函数里就是啥，但传null或undefined时，js执行的是环境的全局变量。  
+apply还可以应用在数组的push上，push本来只能push元素不能push数组，用了apply也很方便，只要目标函数需要参数列表而不接收数组的用apply都会省很多事，知乎上逛了一下，document.getElementsByTagName返回的是一个集合类似数组，但不能应用数组的push等方法，通过	  
+
+	var domNodes = Array.prototype.slice.call(document.getElementsByTagName("*");
+  
+    
+可以应用Array的方法。
