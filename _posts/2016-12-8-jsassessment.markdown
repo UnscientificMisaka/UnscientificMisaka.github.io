@@ -96,4 +96,60 @@ apply还可以应用在数组的push上，push本来只能push元素不能push�
 	var domNodes = Array.prototype.slice.call(document.getElementsByTagName("*");
   
     
-可以应用Array的方法。
+可以应用Array的方法。  
+  
+4.浅谈js闭包  
+闭包：有权访问另一个函数作用域中的变量的函数。主要表现在：  
+(1)函数里嵌套函数  
+(2)函数内部可以引用外部的参数和变量  
+(3)参数和变量不会被回收  
+####Demo 01 避免全局变量污染  
+	function test(){
+		var a = 1;
+		return function(){
+			console.log(a++)
+		};
+	}
+
+	var test = test();
+	test();//1
+	test();//2
+	test = null;//回收变量a
+  
+####Demo 02 常驻内存，易泄漏
+	function test(){
+		var a = document.getElementById('demo');
+		a.onclick = function(){	
+			console.log(a.id);
+		}
+	}
+	test();
+
+demo元素的事件处理函数中又引用了demo元素的id，只要匿名函数存在a的引用数至少为1，始终占用着内存	  
+	
+	function test(){
+		var a = document.getElementById('demo');
+		var value = a.id;
+		a.onclick = function(){
+			console.log(value);
+		}
+		a = null;
+	}
+	test();
+  
+####Demo 03 闭包对局部变量的操作是引用不是复制  
+	function test(){
+		var a = 1;
+		var say = function(){
+			console.log(a);
+		}
+		a++;
+		return say;
+	}
+	
+	var test = test();
+	test();//2
+
+####Demo 04 日后更新
+
+		
