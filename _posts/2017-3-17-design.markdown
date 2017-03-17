@@ -1,0 +1,135 @@
+---
+layout:     post
+title:      "JavaScipt设计模式（一）"
+subtitle:   "函数"
+date:       2017-03-17
+author:     "LRZ"
+header-img: "img/17-3-17.jpg"
+tags:
+    - Javascript
+---
+
+> 今日在图书馆一隅无意发现《JavaScipt设计模式》一书，刚翻几页，如获至宝。
+
+## 函数
+以前写代码受IFE上js基础练习上导师给的代码框架熏陶一直喜欢这样写：
+
+    function a(){
+        ...
+    }
+
+    function b(){
+      ...
+    }
+
+    function init(){
+      ...
+    }
+    init();
+
+
+每次review高分答案觉得别人的代码甚是封装完美，自愧远远不如，但每次观摩所学学的都是凤毛麟角，应用到自身时常想不起来。今观本书方才看破。
+
+#### 1. 通过对象收编    
+
+    var CheckObject = function(){};
+    CheckObject.checkName = function(){
+      ...
+    }
+    CheckObject.checkPassword = function(){
+      ...
+    }
+这样减少覆盖或被覆盖的风险，但团队中其他人想用这个对象方法比较麻烦，不能复制该对象，new的时候新对象没有继承这些方法。进阶如下，调用时返回新对象。  
+
+    var CheckObject = function(){
+      return {
+        CheckName : function(){
+          ...
+        },
+        checkPassword : function(){
+          ...
+        }
+      }
+    }
+    var a = CheckObject();
+    a.checkPassword();
+
+我们可以再完善一下，使其更像一个类：
+
+    var CheckObject = function(){
+      this.checkName = function(){
+        ...
+      },
+      this.checkPassword = function(){
+        ...
+      }
+    }
+    var a = new CheckObject();
+    a.checkName();
+
+这是需要通过关键字new来创建，但每次创建的时候新创建的对象都会对类上的this对象进行复制，很浪费资源，我们需要再进行完善：
+
+    var CheckObject = function(){};
+    CheckObject.prototype.checkName = function(){
+      ...
+    }
+    CheckObject.prototype.checkPassword = function(){
+
+    }
+
+这样创建实例时，都会沿着原型链向上寻找，对象的方法都是同一个，但prototype敲了很多遍，我们可以继续优化：
+    var CheckObject = function(){};
+      CheckObject.prototype = {
+        checkName : function(){
+          ...
+        },
+        checkPassword : function(){
+          ...
+        }
+      }
+    var a = new CheckObject();
+    a.checkName();
+    a.checkPassword();
+
+看上去号了很多，如果方法很多但每次调用要敲很多遍实例名称a,本着代码复用的原则，我们继续优化：
+
+    var CheckObject = function(){};
+    CheckObject.prototype = {
+      checkName : function(){
+        ...
+        return this;
+      },
+      checkPassword : function(){
+        ...
+        return this;
+      }
+    }
+    var a = new CheckObject();
+    a.checkName().checkPassword();
+
+#### 2. 通过祖先添加
+    Function.prototype.checkName = function(){
+      ...
+    }
+    var f = function(){};//函数式
+    var f = new Function();//类式
+    f.checkName();
+但是这样所有的函数都有了checkName的方法，又会浪费很多资源，所以我们需要抽象出一个统一添加的方法:  
+
+    Function.prototype.addMethod = function(name,fn){
+      this[name] = fn;//函数式
+      //链式,但采用链式是调用不能直接使用必须要new
+      this.prototype[name] = fn;
+      return this;
+    }
+    var methods = new Function(){};
+    methods.addMethod('checkName',function(){
+      ...
+    });
+    methods.addMethod('checkPassword',function(){
+      ...
+    });
+    methods.checkName();
+    methods.checkPassword();
+    //同样在每个函数体中return this,即可链式调用
+    methods.checkName().checkPassword();
