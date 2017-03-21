@@ -133,3 +133,72 @@ tags:
     methods.checkPassword();
     //同样在每个函数体中return this,即可链式调用
     methods.checkName().checkPassword();
+
+## 封装
+#### 1. 通过块级作用域封装静态变量
+js函数的块级作用域的存在提供了我们在类中创建私有变量的方法:  
+
+        var Book = function(id,name,price){
+          //私有属性
+          var num = 1;
+          //私有方法
+          function checkId(){
+            console.log("checkId");
+          };
+          //特权方法
+          this.getName = function(){};
+          this.getPrice = function(){};
+          this.setName = function(){};
+          this.setPrice = function(){};
+          //公有属性
+          this.id = id;
+          //公有方法
+          this.copy = function(){};
+          //构造器
+          this.setName(name);
+          this.setPrice(price);
+        }
+        //实例化无法访问到类外.语法添加的属性
+        Book.isChinese = true;
+        Book.resetTime = function(){};
+        //原型上定义的可以直接使用
+        Book.prototype = {
+          isJsBook : false,
+          display : function(){}
+        }
+
+我们每次new一个Book的实例时，相当于执行一次Book,this定义的属性和方法可以复制到新的对象上，通过prototype创建的属性和方法也是可以访问到的，但类外通过点添加的属性或方法却不能访问。那么，如何看上去更像一个整体呢，我们可以试用闭包来实现。
+#### 2. 通过闭包封装静态变量
+JavaScipt高级程序设计一书中如是说：闭包是指有权访问一个函数作用域中的变量的函数。创建闭包的常见方式，就是在一个函数内部创建另一个函数。
+
+    var Book = (function(){
+      //静态私有变量
+      var num = 0;
+      //静态私有方法
+      function checkBook(name){}
+      //创建类
+      function book(newId,newName,newPrice){
+          //私有变量
+          var name,price;
+          //私有方法
+          function checkId(id){};
+          //特权方法
+          this.getName = function(){};
+          this.getPrice = function(){};
+          this.setName = function(){};
+          this.setPrice = function(){};
+          //公有属性
+          this.id = newId;
+          //公有方法
+          this.copy = function(){};
+          //构造器
+          this.setName(name);
+          this.setPrice(price);
+      }
+      //构建原型
+      _book.prototype = {
+        isJsBook : false,
+        display : function(){}
+      };
+      return _book;
+    })();

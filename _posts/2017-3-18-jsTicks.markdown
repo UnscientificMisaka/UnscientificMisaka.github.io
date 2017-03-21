@@ -1,0 +1,31 @@
+---
+layout:     post
+title:      "js奇技总结"
+subtitle:   "函数"
+date:       2017-03-18
+author:     "LRZ"
+header-img: "img/17-3-17.jpg"
+tags:
+    - Javascript
+---
+
+## 踩坑过程中遇见的JavaScipt奇技淫巧总结
+***
+#### 1.让伪数组可以使用数组的方法
+
+<b>Array.prototype.slice.call(document.getElementsByTagName('*'));</b>
+
+牛客上刷题时看见一同学讨论CVTE的前端编程题要求实现一个鼠标一上去浮现当前元素class名称。
+顿时想到通过选取tag集合即可，刚写好调试但每次顺带弹出了html body script这些标签，想用数组的slice方法分割一下，又想到用call或apply可以动态改变this。本来是失败的因为学生只能想到用Array.prototype.call,但恰巧之前学习call和apply用法时看见过知乎某大神的讲解，需要在call前调用一次slice，因为选取出来的是类数组只有length,item这中属性，再用一下slice，slice的返回值就是一个数组，因此可以完美使用array中的所有方法。顺带涨了个知识，slice方法不带参数也是可以的，ES5中slice()如同slice(undefined),而underfined会被转换成0。不得不感叹，Javascript真是一门灵活的语言！
+
+#### 2. 多个dom节点循环对其操作
+
+<b>闭包把当前序号传过去,老生常谈，不再赘述</b>
+
+#### 3. 安全的类型检测  
+
+<b>function isArray(value){
+  return Object.prototype.toString.call(value);
+}</b>
+
+typeof和instanceof并不很可靠，typeof null会返回object，低版本不同了浏览器检测正则会返回function或Object,intstance在一个页面包含多个frame的情况下问题也很多,在任何值上调用Object.tosString都会返回object+构造函数名。

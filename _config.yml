@@ -1,6 +1,6 @@
 # Site settings
-title: Blog
-SEOTitle: 博客
+title: 个人
+SEOTitle: 个人网站
 header-img: img/home-bg.jpg
 email: 1246533834@qq.com
 description: "懒得没有描述"
@@ -68,7 +68,7 @@ ga_domain: lastwhisper.cn
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "好读书，爱发呆，眸子里藏着星辰。"
+sidebar-about-description: "好读书，不聪明，爱死磕。"
 sidebar-avatar: /img/大头贴.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
@@ -82,19 +82,10 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 # Friends
 friends: [
     {
-        title: "薛海浪",
-        href: "#"
+        title: "牛客",
+        href: "https://www.nowcoder.com/3738937"
     },{
-        title: "因为",
-        href: "#"
-    },{
-        title: "我",
-        href: "#"
-    },{
-        title: "只有",
-        href: "#"
-    },{
-        title: "你一个朋友啊",
-        href: "#"
+        title: "IFE",
+        href: "ife.baidu.com"
     }
 ]
