@@ -9,7 +9,7 @@ tags:
     - Javascript
 ---
 
->一路跌跌撞撞，想起初学时document.getElementsByClass死活不起作用，网上找了很久才明白，身边没有人可以交流时，学习真的是举步维艰。
+>一路跌跌撞撞，想起初学时document.getElementsByClass死活不起作用...
 
 ***
 #### 1.让伪数组可以使用数组的方法

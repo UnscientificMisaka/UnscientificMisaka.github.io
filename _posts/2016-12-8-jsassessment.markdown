@@ -8,7 +8,7 @@ header-img: "img/16-12-8.jpg"
 tags:
     - JavaScript
 ---
->啊啊啊我果然不适合学计算机。  
+
 
 
 ## Array  
