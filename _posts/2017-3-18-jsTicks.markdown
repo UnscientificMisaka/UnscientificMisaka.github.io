@@ -9,9 +9,7 @@ tags:
     - Javascript
 ---
 
->一路跌跌撞撞，想起初学时document.getElementsByClass死活不起作用...
 
-***
 #### 1.让伪数组可以使用数组的方法
 
 <b>Array.prototype.slice.call(document.gMetElementsByTagName('*'));</b>
@@ -43,7 +41,7 @@ no talking, show me the code
 
     var a = 1;
     (function() {
-      console.log(a); // undefined 
+      console.log(a); // undefined
       var a = 2;
     })();
 
