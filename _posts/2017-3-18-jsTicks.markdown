@@ -31,6 +31,8 @@ tags:
 
 typeof和instanceof并不很可靠，typeof null会返回object，低版本不同了浏览器检测正则会返回function或Object,intstance在一个页面包含多个frame的情况下问题也很多,在任何值上调用Object.tosString都会返回object+构造函数名。
 
+3.27 update:js中String的初始化方式有两种，var str = "test"和var test = new String("test");这时候我们对new的方式typeof会返回object。
+
 #### 4. Hoisting机制
 <b>本质是只提升声明部分</b>
 no talking, show me the code
@@ -61,3 +63,6 @@ no talking, show me the code
     由于存在foo局部变量，foo被重新赋值，因为是引用类型，全局变量被重新赋值；
     var foo = {n:2};foo在第一步变量提升至匿名函数作用域中顶部，但在现在才被赋值，所以console打印出2
     最后全局变量被改变打印3,若传进来的参数是变量则属于复制,修改并不会影响到全局变量*/
+
+#### 5. 运算符优先级
+错了好多遍，+ 的优先级高于三目运算符，小于括号。
