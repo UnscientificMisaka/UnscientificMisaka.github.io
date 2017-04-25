@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Nodejs问题记录"
-subtitle:   "状态"
+subtitle:   "..."
 date:       2017-04-05
 author:     "LRZ"
 header-img: "img/17-4-5.jpg"
@@ -16,3 +16,16 @@ tags:
 3. module.exports和exports:  
 module.exports初值为一个空对象，expoorts指向的是module.exports的引用，require返回的是module.exports不是exports。
 4. express中渲染模板的对象app.locals和res.locals,但在res.render时res.render传入>res.local>app.local。app.locals挂载常量信息，res.locals挂载变量信息
+5. 装yeoman发现npm版本太低，然后发现node是0.x的版本，然后装nvm也报错，发现git版本太低，git编译又要装一大堆...
+Error: EACCES: permission denied, open '/root/.config/configstore/insight-yo.json'
+You don't have access to this file.
+找了好久，自己尝试过赋权限777了还是不行最好发现解决办法为chmod g+rwx /root /root/.config /root/.config/configstore必须要加g?
+yeoman 在linux下涉及到权限比windows复杂
+npm install -g yo --allow-root
+运行前
+chmod -R g+w .npm
+chmod -R g+w /root/.yo-rc-global.json
+6. 安装gulp时gulp-sass报错，得先配python环境
+7. app.use('/static',express.static(config.root + '/public'));
+一定要在static前加/！特意新开了一个express项目才测出来是自己忘记加斜杠了。
+8.以上全是废话，推翻了所有代码开始重构，express + mongodb + stylus + gulp。

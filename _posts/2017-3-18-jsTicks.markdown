@@ -16,7 +16,7 @@ tags:
 <b>Array.prototype.slice.call(document.gMetElementsByTagName('*'));</b>
 
 牛客上刷题时看见一同学讨论CVTE的前端编程题要求实现一个鼠标一上去浮现当前元素class名称。
-顿时想到通过选取tag集合即可，刚写好调试但每次顺带弹出了html body script这些标签，想用数组的slice方法分割一下，又想到用call或apply可以动态改变this。本来是失败的因为学生只能想到用Array.prototype.call,但恰巧之前学习call和apply用法时看见过知乎某大神的讲解，需要在call前调用一次slice，因为选取出来的是类数组只有length,item这中属性，再用一下slice，slice的返回值就是一个数组，因此可以完美使用array中的所有方法。顺带涨了个知识，slice方法不带参数也是可以的，ES5中slice()如同slice(undefined),而underfined会被转换成0。不得不感叹，Javascript真是一门灵活的语言！
+顿时想到通过选取tag集合即可，刚写好调试但每次顺带弹出了html body script这些标签，想用数组的slice方法分割一下，又想到用call或apply可以动态改变this。本来是失败的因为学生只能想到用Array.prototype.call,但恰巧之前学习call和apply用法时看见过知乎某大神的讲解，需要在call前调用一次slice，因为选取出来的是类数组只有length,item这中属性，再用一下slice，slice的返回值就是一个数组，因此可以完美使用array中的所有方法。顺带涨了个知识，slice方法不带参数也是可以的，ES5中slice()如同slice(undefined),而underfined会被转换成0。
 
 #### 2. js深浅拷贝
 <b>var arr1 = arr2;</b>
