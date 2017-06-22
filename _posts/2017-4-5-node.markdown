@@ -1,31 +1,47 @@
 ---
 layout:     post
-title:      "Nodejs问题记录"
-subtitle:   "..."
-date:       2017-04-05
+title:      "项目开发反思"
+subtitle:   ""
+date:       2017-06-21
 author:     "LRZ"
 header-img: "img/17-4-5.jpg"
 tags:
-    - Nodejs
+    - Vue
+    - express
 ---
 
-## 开发过程中一些问题记录
+## 关于项目
+> 该项目所属第八届全国大学生软件服务外包竞赛，赛题编号为A04 蓝鸥IT教育课程考试系统
+![](http://i.imgur.com/EgD4SX4.jpg)
+![](http://i.imgur.com/ihpniVY.jpg)
 
-1. 分离路由层
-2. req.flash is not a function,在app.js中插入的姿势不正确
-3. module.exports和exports:  
-module.exports初值为一个空对象，expoorts指向的是module.exports的引用，require返回的是module.exports不是exports。
-4. express中渲染模板的对象app.locals和res.locals,但在res.render时res.render传入>res.local>app.local。app.locals挂载常量信息，res.locals挂载变量信息
-5. 装yeoman发现npm版本太低，然后发现node是0.x的版本，然后装nvm也报错，发现git版本太低，git编译又要装一大堆...
-Error: EACCES: permission denied, open '/root/.config/configstore/insight-yo.json'
-You don't have access to this file.
-找了好久，自己尝试过赋权限777了还是不行最好发现解决办法为chmod g+rwx /root /root/.config /root/.config/configstore必须要加g?
-yeoman 在linux下涉及到权限比windows复杂
-npm install -g yo --allow-root
-运行前
-chmod -R g+w .npm
-chmod -R g+w /root/.yo-rc-global.json
-6. 安装gulp时gulp-sass报错，得先配python环境
-7. app.use('/static',express.static(config.root + '/public'));
-一定要在static前加/！特意新开了一个express项目才测出来是自己忘记加斜杠了。
-8.以上全是废话，推翻了所有代码开始重构，express + mongodb + stylus + gulp。
+## 技术选型
+拿到这个题目第一反应就是这不特喵的是高仿牛客网吗，产品原型就决定仿牛客网吧，牛客的移动端就改成webapp，整个项目前后端，移动端pc端分离好了。
+
+根据要求按首推前台选了Vue，后台追求快速开发选了express，其实在四月底的时候很想用koa2但着实担心对vue一无所知的我在截止日期前能不能完成，组队一起报名的同学可以忽略，所有的前后台全得我一个人写，小到每一个css,大到整体方向把握，二本的大学web老师还在对着ppt念asp,当时也是了解一点，koa2对异步的支持比express好很多，但对我这种并没有深入到框架底层的还是先稳一点，cnode里论坛关于nodejs搭配mongodb的案例较多，数据库顺风也就用了mongodb。
+
+## 开发历程
+刚开始写的时候也是闷头开始搞，老师让我按软件工程的开发规范来先写文档，整个团队就一个开发人员而且我对前台框架也不了解怎么写。就这样一个人稀里糊涂的从五月初开始了，刚开始看了腾云阁三篇关于vue的入门文档，跟着写了几个组件大概知道怎么回事了，我一直很反感看视频的，顺便扯一下我对如何学习一门新技术或框架的看法，首先看文档的quick start部分，跑几个官方demo,各大论坛上看一些入门案例介绍后，api走马观花看一遍，然后去github上找高star项目，当时发现了现在已经8kstar的高仿饿了么和vue-cnode，事实上这两个项目对初学者来说还是比较难的，刚好高仿饿了么的作者bailicangdu还开源了一个只有几个页面的小型项目happyfri，git clone下来后每个流程跑一遍大概对vue已经有了一定了解了，一个猛子扎下去开干吧。
+
+
+脚手架构建好项目，写了几个组件和页面需要和后台交互时发现vue的作者不在维护vue-resource，果断按推荐换了axios，事实上这个项目我是自顶向下写的，极其不符合开发流程，学生我也很无奈啊，如果给我一张设计稿一份接口文档，前台需要哪些组件，后台需要哪些接口，我直接前端就写前端，自己模拟json数据调试，后端就写后端，最后再联调。在整个项目架构搭起来后从登录页面作为起点开始写，后台的话，其实也还是一个玩具产品，所有的请求首先经路由分发到api层各个对应的入口函数处理，登录和注册不需要携带token,其余请求首先在api层完成权限校验提取出用户id，过滤用户请求内容，传到控制层处理，控制层调用了封装在proxy层操作数据库的一些方法，完成数据拼接后返回给api层在返回给前台。
+
+其实后台的分层架构是读了nodeclub即cnode社区的源码的，cnode由于历史原因用了eventproxy处理异步操作，于是我把proxy层的操作全部return成promise对象，在控制层链式调用，中间踩了很多坑，诸如promise.all循环问题，拜读了《你不知道的promise》一文后大受启发，学到了很多。关于promise写多了一坨坨的then其实也很恶心的，而且用了promise所有的地方也得用pomise才能拿到数据，所以并不能返回给api层纯粹的数据。api层也要then一下。终极方案async确实很优雅，强行把异步伪装成同步。
+
+## 反思
+边学边写导致每到一个阶段后回过头发现以前写的都是屎，重构了很多，比如header组件最初是简单的固定死的组件后面接触到slot，根据需求从一个插槽加到两个插槽等。最初还吐槽vuex的数据不能持久化，写底部导航栏切换图标fill状态的时候傻傻的放进去，刷新丢失后又愚蠢的存到localstorage中，直接获取一下当前url不就可以切换图标的fill样式了嘛，vuex的store本质上只是个全局变量提升。
+
+提到vuex，其实自己开发时用的很不规范，多写了很多函数，没有做到复用，而且每个请求走action,mutaions里触发从type里导入的action函数名称，但在action中并没有用到其可以异步操作的特性，直接触发了mutation的同步操作，想用的话也行比如很多用户同时请求试卷资源，搞个排队等待分发试卷之类的啊。
+
+另外就是看开源项目源码的一些收获，比如vue-cnode的作者在社区如何实现缓存，如何还原滚动条的位置，这里就涉及到把路由从hash模式切换到history模式存储进入组件时的状态，顺带吐槽一下路由切换成history意外的触发了一个小bug,这个bug完全是我对w3c标准的了解不够扎实，登录页面的button标签在ie中默认type是button，在其他浏览器和w3c标准中默认是submit默认提交整个表单，当时呆滞的调了很久很久登录后进入主页又自动跳转回登录页面，至于为什么会回退现在也是懵的，后台验证密码后是放行过去的，前端的路由拦截全关了的。vue社区论坛里的前辈一眼指出了是button标签的语义不规范，很感谢各位前辈在学习过程中遇到问题的指点。
+
+写文章思路有点混乱，这个项目战线拉的太长，目前近一万行移动端才完成大半，最近期末考试也很扎心忙着复习，想到哪写到哪。
+
+继续，上文提到的路由拦截，虽然后台会根据token校验权限及有效期，前台还是要做一下拦截的，首先在定义路由的时候加个字段auth,判断是否需要登录，另外就是用vue-router提供的全局钩子对路由进行判断，记得要调用next()方法否则钩子不会被resolve,这只能做到简单的是否登录拦截，然后结合axios提供的拦截器和后台返回的http状态码，所有前台发起的request的请求如果本地有token加到请求头字段中，没有只有两种情况第一次登录注册，接收的response同样有个拦截器，当返回的状态码是4xx是跳转到登录页面，这是后台校验的事情，提取出userid和有效期，未登录或token过期的返回401,权限不够返回403。
+
+上面讲到了token,再扯一下用户认证方面的内容，传统的认证方式是数据库验证用户后创建session返回，权限校验通过session中信息完成，由于首先开发移动端，了解到到移动端不好共享服务器创建的session或cookie,使用token的话并且之后时间充裕要做第三方登录也符合oauth系列sso单点登录的思想，nodejs社区的jsonwebtoken这个package很轻松的帮我解决了生成token问题，不会造轮子但是把轮子安在自己腿上还是会的。
+
+在token相关上再扩展讲下去，之前读cnode的源码，其中防止csrf攻击的思路也很值得借鉴，首先后台生成token先保存在session中，在页面初始化的时候，token被放在了meta标签中，在表单提交时隐藏一个csrf,在ajax提交时header字段附上，后台收到请求都校验一遍是否与session中解出来的相同，但实际上在本项目前端中并没有用到，一是觉得有了用户身份token本项目也涉及不到什么危险操作，二是觉得实际上web安全这方面我了解不多真要有人搞我这个系统我是扛不住的也就不花时间查查查相关模块api文档用上去了。
+
+在vue-cnode上主要学到了关于回退还原滚动条位置及从缓存中还原页面这一块，先写到这，这几天期末考试时间太紧张。
+
