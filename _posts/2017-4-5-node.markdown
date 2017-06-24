@@ -4,7 +4,7 @@ title:      "项目开发反思"
 subtitle:   ""
 date:       2017-06-21
 author:     "LRZ"
-header-img: "img/17-4-5.jpg"
+header-img: "img/16-09-25.jpg"
 tags:
     - Vue
     - express
@@ -12,8 +12,8 @@ tags:
 
 ## 关于项目
 > 该项目所属第八届全国大学生软件服务外包竞赛，赛题编号为A04 蓝鸥IT教育课程考试系统
-![](http://i.imgur.com/EgD4SX4.jpg)
-![](http://i.imgur.com/ihpniVY.jpg)
+![](http://i.imgur.com/I9gQapv.jpg)
+![](http://i.imgur.com/UUO6yK8.jpg)
 
 ## 技术选型
 拿到这个题目第一反应就是这不特喵的是高仿牛客网吗，产品原型就决定仿牛客网吧，牛客的移动端就改成webapp，整个项目前后端，移动端pc端分离好了。
