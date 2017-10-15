@@ -16,20 +16,23 @@ tags:
 安卓6.0权限系统大改，不在一开始安装时给与app权限，而是动态申请。同时还要另外添加android.permission.ACCESS_COARSE_LOCATION和ACCESS_fINE_LOCATION"。换个低版本的安卓手机一点问题都没有。心酸踩坑里浪费这么久的时间，吸取教训要多逛逛Stackoverflow。<br>
 ```
 if (Build.VERSION.SDK_INT >= 6.0) {
-            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-                /**动态添加权限：ACCESS_FINE_LOCATION*/
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSION_REQUEST_CONSTANT);
-            }
-        }```
-<br>然后函数回调
-```public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_CONSTANT: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("testFindDevice","添加权限成功");
-                }
-                return;
-            }
+    if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+        /**动态添加权限：ACCESS_FINE_LOCATION*/
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            MY_PERMISSION_REQUEST_CONSTANT);
         }
-    }```
+    }
+```
+<br>然后函数回调
+```
+public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    switch (requestCode) {
+        case MY_PERMISSION_REQUEST_CONSTANT: {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.i("testFindDevice","添加权限成功");
+            }
+        return;
+        }
+    }
+}  
+```
