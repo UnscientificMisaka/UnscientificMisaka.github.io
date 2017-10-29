@@ -6,7 +6,7 @@ date:       2017-10-29 22:39:00
 author:     "LRZ"
 header-img: "img/16-12-8.jpg"
 tags:
-    - Android
+    - JavaScript
 ---
 # Async
 最近在组内圆桌分享的议题是Node.js中关于流程控制库的Async部分源码，其实没怎么用过国人写的这个库，上一次分享组内的同学介绍了这个API感觉蛮有意思但讲得太浅了，以身作则希望大家分享的深入一些，虽然估计我到时讲的也很烂...
@@ -101,12 +101,12 @@ function onlyOnce(fn) {
 }
 ```
 见名知意，onlyOnce确保了回调函数只被调用一次，想一想为什么要将传入的回调先保存再讲原函数置为null呢而不是
-直接像下面这样
+直接像下面这样：
 ```
 fn.apply(this, arguments);
 fn = null;
 ```
-其实这里就要说到async的另一个api，map方法，同时并行执行数组里的函数，如果fn.apply出错了fn设置为null会太迟，可能会导致最外层的回调函数被执行多次。  
+这个函数是抽出来公用的，其实这里就要谈到async提供的另一个api：map方法，同时并行执行数组里的函数，如果fn.apply出错了fn设置为null会太迟，有一定的可能性会导致最外层的回调函数被执行多次，所以先保存起来置为null再调用。
 下面我们继续看，略过参数检查部分，它将数组中每个函数包了一层wrapAsync：
 ```
 function asyncify(func) {
@@ -141,7 +141,7 @@ function initialParams(fn) {
     };
 }
 ```
-实际上调用传进来的fn，将callback从参数里pop出来，调用func，如果func是同步的方法立即有结果，如果是异步的方法应该返回promise对象，拿到then后的resolve和reject状态分别出来，invokeCallback对callback做了一层封装：
+实际上调用传进来的fn，将callback从参数里pop出来，调用func，如果func是同步的方法立即有结果，如果是异步的方法应该返回promise对象，拿到then后的resolve和reject状态分别处理，invokeCallback对callback做了一层封装：
 ```
 function invokeCallback(callback, error, value) {
     try {
@@ -154,7 +154,7 @@ function invokeCallback(callback, error, value) {
 为什么要包一层呢？传入的最外层callback也可能是有错误的函数，若在promise中出错如果不用.catch捕获会有这样的警告：
 > UnhandledPromiseRejectionWarning....    
 
-我们无法拿到错误的堆栈信息，于是包了一层try catch后用setImmediate再下一次事件循环中抛出错误堆栈信息，个人觉得完全可以用promise的.catch方法，包一层觉得没必要。  
+我们无法拿到错误的堆栈信息，于是包了一层try catch后用setImmediate再下一次事件循环中抛出错误堆栈信息，个人觉得完全可以用promise的.catch方法，包一层觉得没有太大必要。  
 源码中的setImmediate也是做了一次处理的：
 ```
 function fallback(fn) {
@@ -189,4 +189,4 @@ process.nextTick插到event loop中的任务队列头部，它的存储形式是
 
 总结一下，最初自己实现的waterfall和源码的waterfall有什么差距，源码的容错机制做的更好，对细节的把握，若用户传入的函数是异步函数，若用户传入的callback也是有问题的等等，另外就是柯里化的地方用的较多，乍一看会比较懵这里调用这个函数返回另一个函数又在里面调用传入的函数等等。  
 
-除去框架，库内部高度抽象外在业务里用到处用柯里化，大概会比较恶心，会被刚来的新人打的..
+除去框架轮子内部高度抽象外，在业务里用到处用柯里化，大概会比较恶心，会被刚来的新人打的..
