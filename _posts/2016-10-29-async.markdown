@@ -1,0 +1,192 @@
+---
+layout:     post
+title:      "Async"
+subtitle:    "异步流程控制源码解析"
+date:       2017-10-29 22:39:00
+author:     "LRZ"
+header-img: "img/16-12-8.jpg"
+tags:
+    - Android
+---
+# Async
+最近在组内圆桌分享的议题是Node.js中关于流程控制库的Async部分源码，其实没怎么用过国人写的这个库，上一次分享组内的同学介绍了这个API感觉蛮有意思但讲得太浅了，以身作则希望大家分享的深入一些，虽然估计我到时讲的也很烂...
+## waterfall
+根据官方Doc的demo，waterfall的用法类似如下：
+```
+waterfall([
+      function(callback) {
+          callback(null, 'one', 'two');
+      },
+      function(arg1, arg2, callback) {
+          // arg1 now equals 'one' 
+          //  arg2 now equals 'two'
+          callback(null, 'three');
+      },
+      function(arg1, callback) {
+          // arg1 now equals 'three'
+          callback(null, 'done');
+      }
+  ], function (err, result) {
+      console.log('callback arguments',arguments)
+      // result now equals 'done'
+ });
+```  
+概括一下，waterfall做了四件事：  
+* 按照Array中的顺序依次执行  
+* 前一个函数的返回值作为后一个函数的参数  
+* 中途任一函数出错调用回调结束
+* 所有函数执行完毕后回调结束  
+
+这四点的流程控制实际上很容易实现，稍加思索我们可以写出类似以下代码：
+
+```
+var waterfall = function (tasks, callback) {
+    var index = 0;
+
+    function runTask (index, args, callback) {
+        var task = tasks[index];
+        args.push(callback);
+        task.apply(null, args);
+    }
+
+    function _callback () {
+        if (arguments[0] || index === tasks.length) {
+            return callback && callback.apply(null, arguments);
+        }
+
+        var _args = [].slice.call(arguments, 1);
+        runTask(index++, _args, _callback);
+    }
+
+    runTask(index++, [], _callback);
+}
+```
+
+首先保存一个队当前数组中执行函数的索引，这个索引由于在waterfall中内部函数runTask访问外部的index形成闭包得以保存。在数组中每个函数体内部我们会手动调用callback传递参数，若首位参数存在即err直接调用最外部回调结束。
+
+接下来看一下源码中的实现过程：
+```
+var waterfall = function (tasks, callback) {
+    callback = once(callback || noop);
+    if (!isArray(tasks)) 
+      return callback(new Error('...'));
+    if (!tasks.length) return callback();
+    var taskIndex = 0;
+
+    function nextTask(args) {
+        var task = wrapAsync(tasks[taskIndex++]);
+        args.push(onlyOnce(next));
+        task.apply(null, args);
+    }
+
+    function next(err/*, ...args*/) {
+        if (err || taskIndex === tasks.length) {
+            return callback.apply(null, arguments);
+        }
+        nextTask(slice(arguments, 1));
+    }
+
+    nextTask([]);
+}
+```
+源码中很多函数被柯里化过，看起来有点抽象。首先从函数内部第一行看起, 以下是once的源码：
+```
+function onlyOnce(fn) {
+    return function() {
+        if (fn === null) throw new Error("Callback was already called.");
+        var callFn = fn;
+        fn = null;
+        callFn.apply(this, arguments);
+    };
+}
+```
+见名知意，onlyOnce确保了回调函数只被调用一次，想一想为什么要将传入的回调先保存再讲原函数置为null呢而不是
+直接像下面这样
+```
+fn.apply(this, arguments);
+fn = null;
+```
+其实这里就要说到async的另一个api，map方法，同时并行执行数组里的函数，如果fn.apply出错了fn设置为null会太迟，可能会导致最外层的回调函数被执行多次。  
+下面我们继续看，略过参数检查部分，它将数组中每个函数包了一层wrapAsync：
+```
+function asyncify(func) {
+    return initialParams(function (args, callback) {
+        var result;
+        try {
+            result = func.apply(this, args);
+        } catch (e) {
+            return callback(e);
+        }
+        // if result is Promise object
+        if (isObject(result) && typeof result.then === 'function') {
+            result.then(function(value) {
+                invokeCallback(callback, null, value);
+            }, function(err) {
+                invokeCallback(callback, err.message ? err : new Error(err));
+            });
+        } else {
+            callback(null, result);
+        }
+    });
+}
+```
+
+它返回了一个initialParams函数，这个函数是初始化参数的：
+```
+function initialParams(fn) {
+    return function (/*...args, callback*/) {
+        var args = slice(arguments);
+        var callback = args.pop();
+        fn.call(this, args, callback);
+    };
+}
+```
+实际上调用传进来的fn，将callback从参数里pop出来，调用func，如果func是同步的方法立即有结果，如果是异步的方法应该返回promise对象，拿到then后的resolve和reject状态分别出来，invokeCallback对callback做了一层封装：
+```
+function invokeCallback(callback, error, value) {
+    try {
+        callback(error, value);
+    } catch (e) {
+        setImmediate(rethrow, e);
+    }
+}
+```  
+为什么要包一层呢？传入的最外层callback也可能是有错误的函数，若在promise中出错如果不用.catch捕获会有这样的警告：
+> UnhandledPromiseRejectionWarning....    
+
+我们无法拿到错误的堆栈信息，于是包了一层try catch后用setImmediate再下一次事件循环中抛出错误堆栈信息，个人觉得完全可以用promise的.catch方法，包一层觉得没必要。  
+源码中的setImmediate也是做了一次处理的：
+```
+function fallback(fn) {
+    setTimeout(fn, 0);
+}
+
+function wrap(defer) {
+    return function (fn/*, ...args*/) {
+        var args = slice(arguments, 1);
+        defer(function () {
+            fn.apply(null, args);
+        });
+    };
+}
+
+var _defer;
+
+if (hasSetImmediate) {
+    _defer = setImmediate;
+} else if (hasNextTick) {
+    _defer = process.nextTick;
+} else {
+    _defer = fallback;
+}
+export default wrap(_defer);
+```
+导出的wrap是invokeCallback中的setImmediate方法，优先使用setImmediate，然后process.nextTick，最后用setTimeout(fn,0)的方式，都是放到下轮事件循环中。  
+process.nextTick插到event loop中的任务队列头部，它的存储形式是一个数组，每次执行完数组中的所有回调后再继续执行，setImmediate是加到队列尾部，存储形式是一个链表，每次只取出第一个元素回调。如果想要异步抛出为啥不优先用nextTick而用setImmediate呢，查了一些资料搜集到一些不确定的猜想，nextTick defer到队列末不会生成call stack， setImmediate defer到函数结束后执行。而nextTick用于递归会爆栈，process.maxTickDepth的缺省值是1000， 递归调用nextTick超过1000会报错
+> RangeError: Maximum call stack size exceeded    
+
+但又不是真正的栈溢出，同步的递归肯定要保存调用栈，异步的递归根本不存在调用栈，nextTick没执行结束，其他回调事件都在后面挨个等待，event loop会被卡住，所以推荐首用setImmediate。  
+
+总结一下，最初自己实现的waterfall和源码的waterfall有什么差距，源码的容错机制做的更好，对细节的把握，若用户传入的函数是异步函数，若用户传入的callback也是有问题的等等，另外就是柯里化的地方用的较多，乍一看会比较懵这里调用这个函数返回另一个函数又在里面调用传入的函数等等。  
+
+除去框架，库内部高度抽象外在业务里用到处用柯里化，大概会比较恶心，会被刚来的新人打的..
