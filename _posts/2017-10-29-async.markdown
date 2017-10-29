@@ -3,12 +3,12 @@ layout:     post
 title:      "Async"
 subtitle:    "异步流程控制源码解析"
 date:       2017-10-29 22:39:00
-author:     "LRZ"
+author:     "LRZ"
 header-img: "img/16-12-8.jpg"
 tags:
     - JavaScript
 ---
-# Async
+
 最近在组内圆桌分享的议题是Node.js中关于流程控制库的Async部分源码，其实没怎么用过国人写的这个库，上一次分享组内的同学介绍了这个API感觉蛮有意思但讲得太浅了，以身作则希望大家分享的深入一些，虽然估计我到时讲的也很烂...
 ## waterfall
 根据官方Doc的demo，waterfall的用法类似如下：

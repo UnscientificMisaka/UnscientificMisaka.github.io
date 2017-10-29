@@ -8,8 +8,9 @@ header-img: "img/post-bg-第一篇.jpg"
 tags:
     - Android
 ---
-## 蓝牙
-一直接收不到搜索到设备的广播，自己一个人瞎琢磨也不知道哪里出了问题，百度的情况也没用上，看了看API文档也没找到问题。留着日后更上解决方法，![](http://i.imgur.com/CMeC8IC.png)
+  
+
+一直接收不到搜索到设备的广播，自己一个人瞎琢磨也不知道哪里出了问题，网上找的各种情况也没用上，看了看API文档也没找到问题。留着日后更上解决方法，![](http://i.imgur.com/CMeC8IC.png)
 ![](http://i.imgur.com/1px7v4v.png)<br>
 11月13日update：<br>
 安卓6.0要动态添加权限！<br>
