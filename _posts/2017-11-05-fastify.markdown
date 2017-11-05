@@ -18,7 +18,7 @@ fastify的benchmark比koa快20%，在serialization这块，2.x倍faster than JSO
 比原生的JSON.stringify快是因为它用了schema, 避免了每次转json都要遍历所有的key value，根据参数类型执行不同方法转换。
 有了schema提前知道了类型，省下了类型判断，遍历的开销。虽然生成的json字符串是js代码，据JIT优化和原生的比较起来不差。
 下边是自己做的一个benchmark结果：  
-![](https://github.com/UnscientificMisaka/UnscientificMisaka.github.io/blob/master/img/in-post/2017-11-05/benchmark.png)   
+![](/img/in-post/2017-11-05/benchmark.png)   
 使用schema用js代码转的ops明显高于内置原生实现.
 翻到作者第一次commit的记录，build的代码如下：
 ```
@@ -95,8 +95,8 @@ function reusify (Constructor) {
 ```  
 十几行代码很精简，享元模式的大部分状态都可以外部化，而在fastify这个框架中是怎么用的呢，在中间件的使用上，fastify传入了一个叫Holder的构造函数进去，它包含了request,response,context等对象，并还有一个done方法，done方法里重置了对象的属性。中间件运行的时候会从reusify(Holder)即这个对象池中get出来当前对象,如果有下一个要运行的中间件，会将当前上下文对象向下走。直到出错或中间件走到尽头将对象release掉。所以每来一个请求，从池中取出对象，初始化，然后调用done方法release掉还原对象。具体中间件运行的源码可以点[这里](https://github.com/fastify/middie/blob/master/middie.js)，至我谢谢这段文字这里只有20个star，reusify也只有43个star。除去fastify框架而看，确实两个repo代码并没有惊艳的地方，放在一起加上json schema着实提高了它的性能，基于json schema的stringfiy的repo的star蛮多的有四百多个。  
 按照repo里的benchmark测试了一下，模拟高cpu负载下的表现，分别循环一亿次斐波那契求值到30，50，然而实际的表现是不池化的代码更快一点：
-![](https://github.com/UnscientificMisaka/UnscientificMisaka.github.io/blob/master/img/in-post/2017-11-05/reuse.png) 
-![](https://github.com/UnscientificMisaka/UnscientificMisaka.github.io/blob/master/img/in-post/2017-11-05/reuse2.png) 
+![](/img/in-post/2017-11-05/reuse.png) 
+![](/img/in-post/2017-11-05/reuse2.png) 
 官方给出的基准测试数据是求到100位的时候池化对象的表现是比不池化要快的，这个要测试对我的本本来说耗时有点长...
 
 ## 路由  
