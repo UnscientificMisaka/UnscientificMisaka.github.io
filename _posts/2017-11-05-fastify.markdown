@@ -7,7 +7,9 @@ author:     "LRZ"
 header-img: "img/16-12-8.jpg"
 tags:
     - JavaScript
----
+---  
+
+
 最近fastify这个Node.js框架忽然冒出头来了，介绍一下这个框架吧，额，我当然不会介绍如何使用它，用它自己去看API文档，虽然有些噱头，但在下目前首选还是koa，框架周边的生态还是很重要的。  
 fastify快在哪里，一个是json的输出快，对node做api层的场景还是很适用的，另一个是作了对象池化。
 ## JSON
